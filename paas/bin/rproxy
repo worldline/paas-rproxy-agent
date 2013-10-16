@@ -1,0 +1,12 @@
+#!/bin/bash
+
+while getopts "tr" option; do
+  case $option in 
+    r ) /usr/sbin/nginx -t -q ; exit $? ;;
+    t ) /usr/sbin/nginx -s reload ; exit $? ;;
+    * ) echo "Usage ${0} -r|-t"; exit 0;;
+  esac   
+done
+
+unset OPTARG
+unset OPTIND

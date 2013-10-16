@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [ -f /usr/sbin/crm_resource ]; then
+	RESOURCE=$(crm_resource --resource vip --locate) 
+	RESOURCE=${RESOURCE#resource*: }
+	MYHOST=$(hostname --fqdn)
+	if [ "${RESOURCE}" == "${MYHOST} " ]; then exit 0 ; else exit 1; fi
+fi

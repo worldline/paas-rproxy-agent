@@ -1,0 +1,61 @@
+<% if template == "upstream" %>upstream <%= urlName %> { <% for name in arguments %>
+  server <%= name %>; <% end %>
+}<% end %>
+<% if template == "http" %>
+#
+# HTTP server configuration
+#
+server {
+    listen       80 ;
+    server_name  <%= urlName %> <% for myalias in aliases %><%= myalias %> <% end %>; 
+
+    location / {
+  add_header X-Forwarded-Proto "http";
+
+  default_type none;
+  proxy_pass http://<%= urlName %>;
+
+    }
+  location /nginx_status {
+  stub_status on;
+  access_log   off;
+  allow locahost; 
+  deny all;
+  }
+}<% end %>
+<% if template == "https" %>
+#
+# HTTPS server configuration
+#
+
+server {
+    listen       443;
+    server_name  <%= urlName %> <% for myalias in aliases %><%= myalias %> <% end %>;
+
+    ssl                  on;
+
+  proxy_set_header  X-Forwarded-SSL-Client-Cert $ssl_client_cert; 
+
+    ssl_certificate      /etc/pki/tls/certs/localhost.crt;
+    ssl_certificate_key  /etc/pki/tls/private/localhost.key;
+
+
+  ssl_protocols SSLv3 TLSv1;
+  ssl_ciphers RSA:!EXPORT:!DH:!LOW:!NULL:+MEDIUM:+HIGH;
+
+    location / {
+        root   /var/www/html;
+  add_header X-Forwarded-Proto "http";
+
+  default_type none;
+  proxy_pass http://<%= urlName %>;
+
+    }
+  location /nginx_status {
+  stub_status on;
+  access_log   off;
+  allow localhost; 
+  deny all;
+  }
+
+}<% end %>
