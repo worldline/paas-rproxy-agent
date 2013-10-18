@@ -19,7 +19,7 @@ server {
   location /nginx_status {
   stub_status on;
   access_log   off;
-  allow locahost; 
+  allow 127.0.0.1; 
   deny all;
   }
 }<% end %>
@@ -54,7 +54,7 @@ server {
   location /nginx_status {
   stub_status on;
   access_log   off;
-  allow localhost; 
+  allow 127.0.0.1; 
   deny all;
   }
 
